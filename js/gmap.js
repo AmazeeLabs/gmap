@@ -359,6 +359,11 @@ Drupal.gmap.addHandler('gmap', function (elem) {
         if (obj.vars.behavior.nocontzoom) {
             opts.disableDoubleClickZoom = true;
         }
+        // Overview Map
+        if (obj.vars.behavior.overview) {
+            opts.overviewMapControl = true;
+            opts.overviewMapControlOptions = {opened: true};
+        }
 
     });
 
