@@ -10,7 +10,7 @@
         var obj = this;
 
         var binding = obj.bind("locpickchange", function () {
-            obj.locpick_invalid = !(obj.locpick_coord && obj.locpick_coord.jb && obj.locpick_coord.kb);// has a proper coord has been set since we last checked
+            obj.locpick_invalid = !(obj.locpick_coord && obj.locpick_coord.lat && obj.locpick_coord.lng);// has a proper coord has been set since we last checked
             if (obj.locpick_invalid) {
                 return; // invalid coord
             }
@@ -23,11 +23,12 @@
                 });
 
                 google.maps.event.addListener(obj.locpick_point, 'drag', function () {
-                    obj.locpick_coord = new google.maps.LatLng(obj.locpick_point.getPosition().lat(), obj.locpick_point.getPosition().lng());
+                    obj.locpick_coord = obj.locpick_point.getPosition();
                     obj.change('locpickchange', binding);
                 });
                 google.maps.event.addListener(obj.locpick_point, 'dragend', function () {
-                    obj.locpick_coord = new google.maps.LatLng(obj.locpick_point.getPosition().lat(), obj.locpick_point.getPosition().lng());
+                    obj.locpick_coord = obj.locpick_point.getPosition();
+                    obj.map.panTo(obj.locpick_coord);
                     obj.change('locpickchange', binding);
                 });
                 obj.map.panTo(obj.locpick_coord);
@@ -66,7 +67,8 @@
         obj.bind("ready", function () {
             // Fake a click to set the initial point, if one was set.
             if (obj.vars.behavior.locpick) {
-                if (!obj.locpick_invalid) {
+                if (!obj.locpick_point) {
+                    obj.locpick_coord = new google.maps.LatLng(obj.vars.latitude, obj.vars.longitude);
                     obj.change('locpickchange');
                 }
             }
