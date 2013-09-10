@@ -337,8 +337,9 @@ Drupal.gmap.addHandler('gmap', function (elem) {
         // Navigation control type
         if (obj.vars.controltype !== 'None') {
             opts.zoomControl = true;
-            // needs its own switch
-            opts.panControl = true;
+        }
+        if (obj.vars.pancontrol) {
+          opts.panControl = true;
         }
         if (obj.vars.controltype === 'Small') {
             obj.zoomControlOptions = {style: google.maps.ZoomControlStyle.SMALL};
