@@ -92,15 +92,15 @@ Drupal.gmap.addHandler('gmap', function (elem) {
     if ( !highlight.behavior ) { highlight.behavior = {}; } // sanity
     if ( !highlight.position ) { highlight.position = new google.maps.LatLng( highlight.latitude, highlight.longitude ); } // if you have a pos already then use it, otherwise gimme a lat/lon
 
-    jQuery.each({ // collect the options from either the highlight.opts object, from the passed target value, as a behavior or a default value.
-      radius: {target:'radius',default:10}, // radius in pixels
-      strokeColor: {target:'border',default:'#777777'},
-      strokeWeight: {target:'weight',default:2},
-      strokeOpacity: {target:'opacity',default:0.7},
-      fillColor: {target:'color',default:'#777777'},
-      fillOpacity: {target:'opacity',default:0.7},
-      draggable: {behavior:'draggable',default:false},
-      editable: {behavior:'editable',default:false},
+    jQuery.each({ // collect the options from either the highlight.opts object, from the passed target value, as a behavior or a defaultVal value.
+      radius: {target:'radius',defaultVal:10}, // radius in pixels
+      strokeColor: {target:'border',defaultVal:'#777777'},
+      strokeWeight: {target:'weight',defaultVal:2},
+      strokeOpacity: {target:'opacity',defaultVal:0.7},
+      fillColor: {target:'color',defaultVal:'#777777'},
+      fillOpacity: {target:'opacity',defaultVal:0.7},
+      draggable: {behavior:'draggable',defaultVal:false},
+      editable: {behavior:'editable',defaultVal:false}
     }, function( key , config ) {
       if ( highlight.opts[key] ) { // options was passed in
         return true;
@@ -111,8 +111,8 @@ Drupal.gmap.addHandler('gmap', function (elem) {
       else if ( config.behavior && highlight.behavior && highlight.behavior[ config.behavior ] ) { // value is a behaviour, should it be enabled?
         highlight.opts[key] = highlight.behavior[ config.behavior ];
       }
-      else if (config.default) { // default value
-        highlight.opts[key] = config.default;
+      else if (config.defaultVal) { // defaultVal value
+        highlight.opts[key] = config.defaultVal;
       }
     });
 
@@ -182,7 +182,7 @@ Drupal.gmap.addHandler('gmap', function (elem) {
   });
 
  // Marker specific highlight events:
-  var highlightedMarkers = []; // remember markers that have been highlighted. so that we can un-highlight them all at one.  The default behaviour is to allow only 1 marker highlighted at any time.
+  var highlightedMarkers = []; // remember markers that have been highlighted. so that we can un-highlight them all at one.  The defaultVal behaviour is to allow only 1 marker highlighted at any time.
   obj.bind('markerHighlight', function (marker) {
     highlightedMarkers.push( marker );
 
