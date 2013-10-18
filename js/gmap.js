@@ -341,6 +341,9 @@ Drupal.gmap.addHandler('gmap', function (elem) {
         if (obj.vars.pancontrol) {
           opts.panControl = true;
         }
+        if (obj.vars.streetviewcontrol) {
+          opts.streetViewControl = true;
+        }
         if (obj.vars.controltype === 'Small') {
             obj.zoomControlOptions = {style: google.maps.ZoomControlStyle.SMALL};
         }

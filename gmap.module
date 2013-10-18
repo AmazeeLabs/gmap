@@ -30,6 +30,7 @@ function gmap_defaults() {
     'maxzoom' => 14,
     'controltype' => 'Small',
     'pancontrol' => 1,
+    'streetviewcontrol' => 0,
     'align' => 'None',
     'latlong' => '40,0',
     'maptype' => 'Map',
