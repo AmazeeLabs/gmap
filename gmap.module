@@ -6,6 +6,7 @@
  */
 
 use Drupal\gmap\GmapDefaults;
+use Drupal\gmap\GmapBehaviours;
 
 /**
  * Define the Google Maps API version being used.
@@ -52,20 +53,11 @@ function gmap_theme() {
  * Invokes hook_gmap() in every module.
  *
  * We can't use module_invoke_all() because we pass $map by reference.
+ * @deprecated use GmapBehaviours::getInstance()->getBehaviours($op, $map);
  */
-function gmap_module_invoke($op, &$map) {
-  $return = array();
-  foreach (module_implements('gmap') as $module) {
-    $function = $module . '_gmap';
-    $result = $function($op, $map);
-    if (isset($result) && is_array($result)) {
-      $return = array_merge_recursive($return, $result);
-    }
-    elseif (isset($result)) {
-      $return[] = $result;
-    }
-  }
-  return $return;
+function gmap_module_invoke($op, $map) {
+  include_once(drupal_get_path('module', 'gmap') . '/lib/Drupal/gmap/GmapBehaviours.php');
+  return GmapBehaviours::getInstance()->getBehaviours($op, $map);
 }
 
 /**
