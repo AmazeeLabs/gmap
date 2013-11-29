@@ -306,7 +306,7 @@ function gmap_admin_settings($form, &$form_state) {
     $opts['clustermarker'] = array();
   }
 
-  $opts['gmap'] = array_merge(array(// None.
+  $opts['gmap'] = array_merge(array( // None.
   ), $opts['gmap']);
 
   $opts['gmarkermanager'] = array_merge(array(

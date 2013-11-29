@@ -5,6 +5,8 @@
  * GMap -- Routines to use the Google Maps API in Drupal.
  */
 
+use Drupal\gmap\GmapDefaults;
+
 /**
  * Define the Google Maps API version being used.
  *
@@ -21,36 +23,11 @@ define('GMAP_API_VERSION', '3');
 
 /**
  * Get the defaults for a gmap.
+ * @deprecated use GmapDefaults::getInstance()->getDefaults()
  */
 function gmap_defaults() {
-  $defaults = array(
-    'width' => '300px',
-    'height' => '200px',
-    'zoom' => 3,
-    'maxzoom' => 14,
-    'controltype' => 'Small',
-    'pancontrol' => 1,
-    'streetviewcontrol' => 0,
-    'align' => 'None',
-    'latlong' => '40,0',
-    'maptype' => 'Map',
-    'mtc' => 'standard',
-    'baselayers' => array('Map', 'Satellite', 'Hybrid'),
-    'styles' => array(
-      'line_default' => array('0000ff', 5, 45, '', 0, 0),
-      'poly_default' => array('000000', 3, 25, 'ff0000', 45),
-      'highlight_color' => 'ff0000',
-    ),
-    'line_colors' => array('#00cc00', '#ff0000', '#0000ff'),
-  );
-  $defaults['behavior'] = array();
-  $m = array();
-  $behaviors = gmap_module_invoke('behaviors', $m);
-  foreach ($behaviors as $k => $v) {
-    $defaults['behavior'][$k] = $v['default'];
-  }
-  $defaults = array_merge($defaults, variable_get('gmap_default', array()));
-  return $defaults;
+  include_once(drupal_get_path('module', 'gmap') . '/lib/Drupal/gmap/GmapDefaults.php');
+  return GmapDefaults::getInstance()->getDefaults();
 }
 
 /**
