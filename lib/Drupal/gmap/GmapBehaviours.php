@@ -11,7 +11,7 @@ namespace Drupal\gmap;
 
 class GmapBehaviours {
 
-  static private $behaviours;
+  private $behaviours;
 
   static private $gmapBehaviours;
 
@@ -35,17 +35,18 @@ class GmapBehaviours {
   }
 
   public function getBehaviours($op, $map) {
-      self::$behaviours = array();
+    unset($this->behaviours);
+    $this->behaviours = array();
       foreach (module_implements('gmap') as $module) {
         $function = $module . '_gmap';
         $result = $function($op, $map);
         if (isset($result) && is_array($result)) {
-          self::$behaviours = array_merge_recursive(self::$behaviours, $result);
+          $this->behaviours = array_merge_recursive($this->behaviours, $result);
         }
         elseif (isset($result)) {
-          self::$behaviours[] = $result;
+          $this->behaviours[] = $result;
         }
       }
-    return self::$behaviours;
+    return $this->behaviours;
   }
 } 
