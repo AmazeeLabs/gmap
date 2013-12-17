@@ -226,7 +226,7 @@ function gmap_taxonomy_vocabulary_is_enabled($vocabulary) {
   }
 
   return $vocabulary
-    && variable_get('gmap_taxonomy_vocab_' . $vocabulary->machine_name, FALSE);
+  && variable_get('gmap_taxonomy_vocab_' . $vocabulary->machine_name, FALSE);
 }
 
 /**
