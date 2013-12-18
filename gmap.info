@@ -8,3 +8,4 @@ files[] = gmap_plugin_style_gmap.inc
 files[] = gmap_plugin_style_gmapextended.inc
 files[] = tests/gmap.test
 files[] = lib/Drupal/gmap/GmapDefaults.php
+files[] = lib/Drupal/gmap/GmapPolylineToolbox.php
