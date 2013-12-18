@@ -742,7 +742,7 @@ function _gmap_location_block_view($nid) {
       $map['latitude'] = $markers[0]['latitude'];
       $map['longitude'] = $markers[0]['longitude'];
       $map['markers'] = $markers;
-      $block['subject'] = t('Location');
+      $block['subject'] = t('Location', array(), array('context' => 'geolocation'));
       $element = array(
         '#type' => 'gmap',
         '#gmap_settings' => $map,
