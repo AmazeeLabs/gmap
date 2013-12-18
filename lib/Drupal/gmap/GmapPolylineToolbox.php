@@ -13,11 +13,6 @@
  * [3] http://mathworld.wolfram.com/
  */
 
-//DEFINE('GMAP_DP_EPSILON', 0.00001);
-//DEFINE('GMAP_ZOOM_LEVELS', 18);
-//DEFINE('GMAP_ZOOM_FACTOR', 2);
-
-
 namespace Drupal\gmap;
 
 
@@ -29,45 +24,46 @@ class GmapPolylineToolbox {
 
   const GMAP_ZOOM_FACTOR = 2;
 
-  public $latlonNumber;
+  private $latlonNumber;
 
-  public $latlonLevels;
+  private $latlonLevels;
 
-  public $encodedlatlonNumber;
+  private $encodedlatlonNumber;
 
-  public $encoded;
+  private $encoded;
 
-  public $startPoint;
+  private $startPoint;
 
-  public $endPoint;
+  private $endPoint;
 
-  public $distance;
+  private $distance;
 
-  public $measurePoint;
-
-  /**
-   * @var array
-   */
-  public $points;
+  private $measurePoint;
 
   /**
    * @var array
    */
-  public $pointWeights;
+  private $points;
 
-  public $weight;
+  /**
+   * @var array
+   */
+  private $pointWeights;
 
-  static public $levels;
+  private $weight;
+
+  static protected $levels;
 
   /**
    * @var static Singleton instance
    */
-  static private $gmapInstance;
+  static protected $gmapInstance;
 
   /**
    * do not change
    */
   private function __construct() {
+    self::$levels = $this->getZoomLevels();
   }
 
   /**
@@ -109,7 +105,7 @@ class GmapPolylineToolbox {
     if ($this->latlonNumber < 0) {
       $this->latlonNumber = ~($this->latlonNumber);
     }
-    $this->encodedlatlonNumber = _gmap_polyutil_encode($this->latlonNumber);
+    $this->encodedlatlonNumber = $this->setLatLonNumber($this->latlonNumber)->getEncode();
     return $this->encodedlatlonNumber;
   }
 
@@ -118,7 +114,7 @@ class GmapPolylineToolbox {
    * @return string
    */
   function getEncodedLevels() {
-    $this->latlonLevels = _gmap_polyutil_encode(abs($this->latlonNumber));
+    $this->latlonLevels = $this->setLatLonNumber(abs($this->latlonNumber))->getEncode();
     return $this->latlonLevels;
   }
 
@@ -177,7 +173,7 @@ class GmapPolylineToolbox {
     if ($this->startPoint[0] == $this->endPoint[0] && $this->startPoint[1] == $this->endPoint[1]) {
       // lp1 and lp2 are the same point--they don't define a line--so we return
       // the distance between two points.
-      $this->distance = gmap_polyutil_dist($this->measurePoint, $this->startPoint);
+      $this->distance = $this->getDist();
       return $this->distance;
     }
 
@@ -188,19 +184,20 @@ class GmapPolylineToolbox {
     $u = (($this->endPoint[1] - $this->startPoint[1]) * ($this->measurePoint[1] - $this->startPoint[1]) + ($this->endPoint[0] - $this->startPoint[0]) * ($this->measurePoint[0] - $this->startPoint[0])) / (pow($this->endPoint[1] - $this->startPoint[1], 2) + pow($this->endPoint[0] - $this->startPoint[0], 2));
 
     if ($u <= 0) { // point is not alongside segment, it is further off in $p1's direction
-      return gmap_polyutil_dist($this->measurePoint, $this->startPoint);
+      return $this->setLinePoints($this->measurePoint, $this->startPoint)->getDist();
     }
     elseif ($u >= 1) { // point is not alongside segment, it is further off in $p2's direction
-      return gmap_polyutil_dist($this->measurePoint, $this->endPoint);
+      return $this->setLinePoints($this->measurePoint, $this->endPoint)->getDist();
     }
     else { // point is alongside segment
       // calculate distance between q and the nearest point on the line segment
       // use $u to calculate the nearest point on the line segment:
       //   p1 + u*(p2 - p1) => [p1x + u*(p2x - p1x), p1y + u*(p2y - p1y)]
-      $this->distance = gmap_polyutil_dist($this->measurePoint, array(
+
+      $this->distance = $this->setLinePoints($this->measurePoint, array(
         $this->startPoint[0] + $u * ($this->endPoint[0] - $this->startPoint[0]),
         $this->startPoint[1] + $u * ($this->endPoint[1] - $this->startPoint[1])
-      ));
+      ))->getDist();
       return $this->distance;
     }
   }
@@ -246,7 +243,10 @@ class GmapPolylineToolbox {
         // figure out which subdividing point is the furthest off the line segment
         $max_dist = 0;
         for ($i = $segment[0] + 1; $i < $segment[1]; $i++) {
-          $dist = gmap_polyutil_point_line_dist($this->points[$i], $this->points[$segment[0]], $this->points[$segment[1]]);
+          $dist = $this
+            ->setMeasurePoint($this->points[$i])
+            ->setLinePoints($this->points[$segment[0]], $this->points[$segment[1]])
+            ->getPointLineDist();
           if ($dist > $max_dist) {
             $max_dist = $dist;
             $max_i = $i;
@@ -264,7 +264,7 @@ class GmapPolylineToolbox {
     }
 
     // The first and last points of the line should always be visible.
-    $levels = _gmap_polyutil_zoom_levels();
+    $levels = $this->getZoomLevels();
     $this->pointWeights[0] = $levels[0];
     $this->pointWeights[count($this->points) - 1] = $levels[0];
 
@@ -285,15 +285,23 @@ class GmapPolylineToolbox {
     $levels_encoded = '';
 
     // simplify the line
-    $this->pointWeights = gmap_polyutil_dp_encode($this->points);
+    $this->pointWeights = $this->getDPEncode();
 
     $previous = array(0, 0);
     foreach ($this->points as $i => $p) {
       if (isset($this->pointWeights[$i])) {
         // encode each simplified point
         // the deltas between points are encoded, rather than the point values themselves
-        $points_encoded .= gmap_polyutil_encode_latlon($p[0] - $previous[0]) . gmap_polyutil_encode_latlon($p[1] - $previous[1]);
-        $levels_encoded .= gmap_polyutil_encode_levels(_gmap_polyutil_get_zoom_level($this->pointWeights[$i]));
+        $points_encoded .= $this
+          ->setLatLonNumber(($p[0] - $previous[0]) . $this
+              ->setLatLonNumber($p[1] - $previous[1])
+              ->getEncodedLatLon())
+          ->getEncodedLatLon();
+        $levels_encoded .= $this
+          ->setLatLonNumber($this
+            ->setWeight($this->pointWeights[$i])
+            ->getZoomLevel())
+          ->getEncodedLevels();
         $previous = $p;
       }
     }
@@ -341,7 +349,6 @@ class GmapPolylineToolbox {
    * @return int
    */
   function getZoomLevel() {
-    self::$levels = _gmap_polyutil_zoom_levels();
     $i = 0;
     while (self::$levels[$i] > $this->weight) {
       $i++;
