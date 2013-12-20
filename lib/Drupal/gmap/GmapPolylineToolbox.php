@@ -173,8 +173,7 @@ class GmapPolylineToolbox {
     if ($this->startPoint[0] == $this->endPoint[0] && $this->startPoint[1] == $this->endPoint[1]) {
       // lp1 and lp2 are the same point--they don't define a line--so we return
       // the distance between two points.
-      $this->distance = $this->getDist();
-      return $this->distance;
+      return $this->setLinePoints($this->measurePoint, $this->startPoint)->getDist();
     }
 
     // Use the dot product to find where q lies with respect to the line segment
@@ -193,12 +192,7 @@ class GmapPolylineToolbox {
       // calculate distance between q and the nearest point on the line segment
       // use $u to calculate the nearest point on the line segment:
       //   p1 + u*(p2 - p1) => [p1x + u*(p2x - p1x), p1y + u*(p2y - p1y)]
-
-      $this->distance = $this->setLinePoints($this->measurePoint, array(
-        $this->startPoint[0] + $u * ($this->endPoint[0] - $this->startPoint[0]),
-        $this->startPoint[1] + $u * ($this->endPoint[1] - $this->startPoint[1])
-      ))->getDist();
-      return $this->distance;
+      return $this->setLinePoints($this->measurePoint, array($this->startPoint[0] + $u * ($this->endPoint[0] - $this->startPoint[0]), $this->startPoint[1] + $u * ($this->endPoint[1] - $this->startPoint[1])))->getDist();
     }
   }
 

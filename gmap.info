@@ -7,5 +7,7 @@ configure = admin/config/services/gmap
 files[] = gmap_plugin_style_gmap.inc
 files[] = gmap_plugin_style_gmapextended.inc
 files[] = tests/gmap.test
+files[] = tests/oopmigration.test
 files[] = lib/Drupal/gmap/GmapDefaults.php
 files[] = lib/Drupal/gmap/GmapPolylineToolbox.php
+files[] = tests/inc/gmap_polyutil.inc
