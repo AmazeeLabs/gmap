@@ -169,11 +169,20 @@ class GmapMacroToolboxTestCase extends DrupalUnitTestCase{
     $check = \tests\inc\legacy__gmap_str2coord($coordString);
     $result = GmapMacroToolbox::getInstance()->setCoordString($coordString)->getCoord();
     $this->assertEqual($check, $result);
-/*
+
+    $check = \tests\inc\legacy__gmap_str2coord($coordString);
+    $result = _gmap_str2coord($coordString);
+    $this->assertEqual($check, $result);
+
     // legacy__gmap_parse_macro($instring, $ver = 2)
-    $check = \tests\inc\legacy__gmap_parse_macro($instring, $ver = 2);
-    $result = GmapDefaults::getInstance()->getDefaults();
-    $this->assertEqual($check, $result);*/
+    $instring = '[gmap zoom=16 |center=50.450100000000006,30.523400000000045 |width=300px |height=200px |id=ght |control=Small |type=Map]';
+    $check = \tests\inc\legacy__gmap_parse_macro($instring, 2);
+    $result = GmapMacroToolbox::getInstance()->setMacroString($instring, 2)->getParsedMacro();
+    $this->assertEqual($check, $result);
+
+    $check = \tests\inc\legacy__gmap_parse_macro($instring, 2);
+    $result = _gmap_parse_macro($instring, 2);
+    $this->assertEqual($check, $result);
 
   }
 }
