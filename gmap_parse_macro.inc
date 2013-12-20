@@ -22,17 +22,12 @@ function _gmap_parse_style($style) {
 /**
  * Parse "x.xxxxx , y.yyyyyy (+ x.xxxxx, y.yyyyy ...)" into an array of points.
  * @internal
+ *
+ * @deprecated use GmapMacroToolbox::getInstance()->setStyle($style)->getParsedStyles()
  */
 function _gmap_str2coord($str) {
-  // Explode along + axis
-  $arr = explode('+', $str);
-  // Explode along , axis
-  $points = array();
-  foreach ($arr as $pt) {
-    list($lat, $lon) = explode(',', $pt);
-    $points[] = array((float) trim($lat), (float) trim($lon));
-  }
-  return $points;
+  include_once(drupal_get_path('module', 'gmap') . '/lib/Drupal/gmap/GmapMacroToolbox.php');
+  return GmapMacroToolbox::getInstance()->setCoordString($str)->getCoord();
 }
 
 function _gmap_parse_macro($instring, $ver = 2) {

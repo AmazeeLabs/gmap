@@ -164,11 +164,12 @@ class GmapMacroToolboxTestCase extends DrupalUnitTestCase{
     $result = _gmap_parse_style($style);
     $this->assertEqual($check, $result);
 
-/*    // legacy__gmap_str2coord($str)
-    $check = \tests\inc\legacy__gmap_str2coord($str);
-    $result = GmapDefaults::getInstance()->getDefaults();
+    // legacy__gmap_str2coord($str)
+    $coordString = '1.11111 , 2.11111 + 3.11111, 4.11111';
+    $check = \tests\inc\legacy__gmap_str2coord($coordString);
+    $result = GmapMacroToolbox::getInstance()->setCoordString($coordString)->getCoord();
     $this->assertEqual($check, $result);
-
+/*
     // legacy__gmap_parse_macro($instring, $ver = 2)
     $check = \tests\inc\legacy__gmap_parse_macro($instring, $ver = 2);
     $result = GmapDefaults::getInstance()->getDefaults();

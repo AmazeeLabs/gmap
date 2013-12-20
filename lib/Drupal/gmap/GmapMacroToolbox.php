@@ -22,6 +22,11 @@ class GmapMacroToolbox {
   private $style;
 
   /**
+   * @var string
+   */
+  private $coordString;
+
+  /**
    * do not change
    */
   private function __construct() {
@@ -88,5 +93,33 @@ class GmapMacroToolbox {
 
     return $styles;
   }
-}
 
+  /**
+   * @param $str string
+   * @return $this GmapMacroToolbox
+   *
+   * former _gmap_str2coord($str)
+   */
+  public function setCoordString($str){
+    $this->coordString = $str;
+    return $this;
+  }
+
+  /**
+   * Parse "x.xxxxx , y.yyyyyy (+ x.xxxxx, y.yyyyy ...)" into an array of points.
+   * @return array
+   *
+   * former _gmap_str2coord($str)
+   */
+  public function getCoord(){
+    // Explode along + axis
+    $arr = explode('+', $this->coordString);
+    // Explode along , axis
+    $points = array();
+    foreach ($arr as $pt) {
+      list($lat, $lon) = explode(',', $pt);
+      $points[] = array((float) trim($lat), (float) trim($lon));
+    }
+    return $points;
+  }
+}
