@@ -5,25 +5,51 @@
  * GMap macro parsing routines.
  */
 
-use Drupal\gmap\GmapMacroToolbox;
+namespace tests\inc;
+
+include_once(drupal_get_path('module', 'gmap') . '/tests/inc/gmap_defaults.inc');
+include_once(drupal_get_path('module', 'gmap') . '/tests/inc/gmap_polyutil.inc');
 
 /**
  * Parse a macro style definition.
  * Example: #111111/1/100/#111111/1
  * @internal
- *
- * @deprecated use GmapMacroToolbox::getInstance()->setStyle($style)->getParsedStyles()
  */
-function _gmap_parse_style($style) {
-  include_once(drupal_get_path('module', 'gmap') . '/lib/Drupal/gmap/GmapMacroToolbox.php');
-  return GmapMacroToolbox::getInstance()->setStyle($style)->getParsedStyles();
+function legacy__gmap_parse_style($style) {
+  if (strpos($style, '/') === FALSE) {
+    // Style ref.
+    return $style;
+  }
+  $styles = explode('/', $style);
+
+  // @@@ Todo: Fix up old xmaps stuff. Possibly detect by looking for array length 7?
+
+  // Strip off # signs, they get added by code.
+  if (isset($styles[0]) && substr($styles[0], 0, 1) == '#') {
+    $styles[0] = substr($styles[0], 1);
+  }
+  if (isset($styles[3]) && substr($styles[3], 0, 1) == '#') {
+    $styles[3] = substr($styles[3], 1);
+  }
+
+  // Assume anything > 0 and < 1.1 was an old representation.
+  if ($styles[2] > 0 && $styles[2] < 1.1) {
+    $styles[2] = $styles[2] * 100;
+  }
+  if (isset($styles[4])) {
+    if ($styles[4] > 0 && $styles[4] < 1.1) {
+      $styles[4] = $styles[4] * 100;
+    }
+  }
+
+  return $styles;
 }
 
 /**
  * Parse "x.xxxxx , y.yyyyyy (+ x.xxxxx, y.yyyyy ...)" into an array of points.
  * @internal
  */
-function _gmap_str2coord($str) {
+function legacy__gmap_str2coord($str) {
   // Explode along + axis
   $arr = explode('+', $str);
   // Explode along , axis
@@ -35,11 +61,11 @@ function _gmap_str2coord($str) {
   return $points;
 }
 
-function _gmap_parse_macro($instring, $ver = 2) {
+function legacy__gmap_parse_macro($instring, $ver = 2) {
   // Get a list of keys that are "multiple."
   $m = array();
-  $multiple = gmap_module_invoke('macro_multiple', $m);
-  $def = gmap_defaults();
+  $multiple = legacy_gmap_module_invoke('macro_multiple', $m);
+  $def = legacy_gmap_defaults();
 
   // Remove leading and trailing tags
   if (substr(trim($instring), -1) == ']') {
@@ -99,7 +125,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
   if (isset($m['style']) && is_array($m['style'])) {
     foreach ($m['style'] as $k => $v) {
       $temp = explode(':', $v);
-      $m['styles'][$temp[0]] = _gmap_parse_style($temp[1]);
+      $m['styles'][$temp[0]] = legacy__gmap_parse_style($temp[1]);
     }
     unset($m['style']);
   }
@@ -122,7 +148,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
       $cp = strpos($shape, ':');
       if ($cp !== FALSE) {
         $stylestr = substr($shape, 0, $cp);
-        $s['style'] = _gmap_parse_style($stylestr);
+        $s['style'] = legacy__gmap_parse_style($stylestr);
         $shape = substr($shape, $cp + 1);
       }
       $tmp = explode('+', $shape);
@@ -130,7 +156,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
       if (isset($tmp[2]) && $tmp[2]) {
         $s['numpoints'] = trim($tmp[2]);
       }
-      $tmp = _gmap_str2coord($tmp[0]);
+      $tmp = legacy__gmap_str2coord($tmp[0]);
       $s['center'] = $tmp[0];
       $m['shapes'][] = $s;
     }
@@ -165,10 +191,10 @@ function _gmap_parse_macro($instring, $ver = 2) {
       $cp = strpos($shape, ':');
       if ($cp != FALSE) {
         $stylestr = substr($shape, 0, $cp);
-        $s['style'] = _gmap_parse_style($stylestr);
+        $s['style'] = legacy__gmap_parse_style($stylestr);
         $shape = substr($shape, $cp + 1);
       }
-      $s['points'] = _gmap_str2coord($shape);
+      $s['points'] = legacy__gmap_str2coord($shape);
       $m['shapes'][] = $s;
     }
     unset($m['line']);
@@ -179,7 +205,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
       $cp = strpos($shape, ':');
       if ($cp !== FALSE) {
         $stylestr = substr($shape, 0, $cp);
-        $s['style'] = _gmap_parse_style($stylestr);
+        $s['style'] = legacy__gmap_parse_style($stylestr);
         $shape = substr($shape, $cp + 1);
       }
       $tmp = explode('+', $shape);
@@ -188,7 +214,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
         $tmp = array_slice($tmp, 0, 2);
       }
       $shape = implode('+', $tmp);
-      $tmp = _gmap_str2coord($shape);
+      $tmp = legacy__gmap_str2coord($shape);
       $s['center'] = $tmp[0];
       $s['point2'] = $tmp[1];
       $m['shapes'][] = $s;
@@ -201,10 +227,10 @@ function _gmap_parse_macro($instring, $ver = 2) {
       $cp = strpos($shape, ':');
       if ($cp !== FALSE) {
         $stylestr = substr($shape, 0, $cp);
-        $s['style'] = _gmap_parse_style($stylestr);
+        $s['style'] = legacy__gmap_parse_style($stylestr);
         $shape = substr($shape, $cp + 1);
       }
-      $s['points'] = _gmap_str2coord($shape);
+      $s['points'] = legacy__gmap_str2coord($shape);
       $m['shapes'][] = $s;
     }
     unset($m['polygon']);
@@ -338,6 +364,7 @@ function _gmap_parse_macro($instring, $ver = 2) {
 
   // Assign an id if one wasn't specified.
   if (!isset($m['id'])) {
+    // @todo rename this for GmapToolbox method
     $m['id'] = gmap_get_auto_mapid();
   }
 
