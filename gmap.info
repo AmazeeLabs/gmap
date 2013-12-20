@@ -10,5 +10,6 @@ files[] = tests/gmap.test
 files[] = tests/oopmigration.test
 files[] = lib/Drupal/gmap/GmapDefaults.php
 files[] = lib/Drupal/gmap/GmapPolylineToolbox.php
+files[] = lib/Drupal/gmap/GmapMacroToolbox.php
 files[] = tests/inc/gmap_polyutil.inc
 files[] = tests/inc/gmap_defaults.inc
