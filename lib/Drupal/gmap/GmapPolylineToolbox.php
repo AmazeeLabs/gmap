@@ -279,23 +279,15 @@ class GmapPolylineToolbox {
     $levels_encoded = '';
 
     // simplify the line
-    $this->pointWeights = $this->getDPEncode();
+    $weights = $this->getDPEncode();
 
     $previous = array(0, 0);
     foreach ($this->points as $i => $p) {
-      if (isset($this->pointWeights[$i])) {
+      if (isset($weights[$i])) {
         // encode each simplified point
         // the deltas between points are encoded, rather than the point values themselves
-        $points_encoded .= $this
-          ->setLatLonNumber(($p[0] - $previous[0]) . $this
-              ->setLatLonNumber($p[1] - $previous[1])
-              ->getEncodedLatLon())
-          ->getEncodedLatLon();
-        $levels_encoded .= $this
-          ->setLatLonNumber($this
-            ->setWeight($this->pointWeights[$i])
-            ->getZoomLevel())
-          ->getEncodedLevels();
+        $points_encoded .= $this->setLatLonNumber($p[0] - $previous[0])->getEncodedLatLon() . $this->setLatLonNumber($p[1] - $previous[1])->getEncodedLatLon();
+        $levels_encoded .= $this->setLatLonNumber($this->setWeight($weights[$i])->getZoomLevel())->getEncodedLevels();
         $previous = $p;
       }
     }

@@ -63,5 +63,23 @@ class GmapPolylineToolboxTestCase extends DrupalUnitTestCase{
     $result = GmapPolylineToolbox::getInstance()->setMeasurePoint(array(1, 10))->setLinePoints(array(23, 45), array(23, 45))->getPointLineDist();
     $this->assertEqual($check, $result);
 
+    // legacy_gmap_polyutil_dp_encode($points)
+    $check = \tests\inc\legacy_gmap_polyutil_dp_encode(array(array(23, 45), array(123, 145)));
+    $result = GmapPolylineToolbox::getInstance()->setPoints(array(array(23, 45), array(123, 145)))->getDPEncode();
+    $this->assertEqual($check, $result);
+
+    $check = \tests\inc\legacy_gmap_polyutil_dp_encode(array(array(23, 45), array(123, 145), array(1, 10)));
+    $result = GmapPolylineToolbox::getInstance()->setPoints(array(array(23, 45), array(123, 145), array(1, 10)))->getDPEncode();
+    $this->assertEqual($check, $result);
+
+    // legacy_gmap_polyutil_polyline($points)
+    $check = \tests\inc\legacy_gmap_polyutil_polyline(array(array(23, 45), array(123, 145)));
+    $result = GmapPolylineToolbox::getInstance()->setPoints(array(array(23, 45), array(123, 145)))->getPolyline();
+    $this->assertEqual($check, $result);
+
+    $check = \tests\inc\legacy_gmap_polyutil_polyline(array(array(23, 45), array(123, 145), array(1, 10)));
+    $result = GmapPolylineToolbox::getInstance()->setPoints(array(array(23, 45), array(123, 145), array(1, 10)))->getPolyline();
+    $this->assertEqual($check, $result);
+
   }
 }
