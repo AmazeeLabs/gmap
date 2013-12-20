@@ -5,6 +5,7 @@
  */
 
 use Drupal\gmap\GmapPolylineToolbox;
+use Drupal\gmap\GmapDefaults;
 
 class GmapPolylineToolboxTestCase extends DrupalUnitTestCase{
 
@@ -90,6 +91,44 @@ class GmapPolylineToolboxTestCase extends DrupalUnitTestCase{
     $check = \tests\inc\legacy__gmap_polyutil_get_zoom_level(12);
     $result = GmapPolylineToolbox::getInstance()->setWeight(12)->getZoomLevel();
     $this->assertEqual($check, $result);
+
+  }
+}
+
+class GmapDefaultsTestCase extends DrupalUnitTestCase{
+
+  public function setUp(){
+    drupal_load('module', 'gmap');
+    parent::setUp();
+  }
+
+  public static function getInfo(){
+    return array(
+      'name' => 'GMap legacy API defaults refactoring checks',
+      'description' => 'Test the legacy API defaults functions.',
+      'group' => 'GMap',
+    );
+  }
+
+  public function testGmapDefaults(){
+    include_once(drupal_get_path('module', 'gmap') . '/tests/inc/gmap_defaults.inc');
+    include_once(drupal_get_path('module', 'gmap') . '/lib/Drupal/gmap/GmapDefaults.php');
+
+    // legacy_gmap_defaults()
+    $check = \tests\inc\legacy_gmap_defaults();
+    $result = GmapDefaults::getInstance()->getDefaults();
+    $this->assertEqual($check, $result);
+
+    // legacy__gmap_base_js()
+    $check = \tests\inc\legacy__gmap_base_js();
+    $result = GmapDefaults::getInstance()->getBaseJs();
+    $this->assertEqual($check, $result);
+
+    // legacy__gmap_base_js()
+    $check = \tests\inc\legacy__gmap_base_js();
+    $result = _gmap_base_js();
+    $this->assertEqual($check, $result);
+
 
   }
 }

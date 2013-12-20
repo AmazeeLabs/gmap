@@ -98,12 +98,12 @@ class GmapDefaults {
       $query['key'] = $key;
     }
 
-    $ret[$path . '/js/gmap.js'] = array('weight' => 1);
-    $ret[$path . '/js/icon.js'] = array('weight' => 2);
-    $ret[$path . '/js/marker.js'] = array('weight' => 2);
-    $ret[$path . '/js/highlight.js'] = array('weight' => 2);
-    $ret[$path . '/js/poly.js'] = array('weight' => 2);
-    $ret[url(gmap_views_protocol() . '://maps.googleapis.com/maps/' . 'api/js', array('query' => $query))] = array(
+    $this->basejs[$path . '/js/gmap.js'] = array('weight' => 1);
+    $this->basejs[$path . '/js/icon.js'] = array('weight' => 2);
+    $this->basejs[$path . '/js/marker.js'] = array('weight' => 2);
+    $this->basejs[$path . '/js/highlight.js'] = array('weight' => 2);
+    $this->basejs[$path . '/js/poly.js'] = array('weight' => 2);
+    $this->basejs[url(gmap_views_protocol() . '://maps.googleapis.com/maps/' . 'api/js', array('query' => $query))] = array(
       'type' => 'external',
       'weight' => 1,
     );
