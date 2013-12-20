@@ -81,5 +81,15 @@ class GmapPolylineToolboxTestCase extends DrupalUnitTestCase{
     $result = GmapPolylineToolbox::getInstance()->setPoints(array(array(23, 45), array(123, 145), array(1, 10)))->getPolyline();
     $this->assertEqual($check, $result);
 
+    // legacy__gmap_polyutil_zoom_levels()
+    $check = \tests\inc\legacy__gmap_polyutil_zoom_levels();
+    $result = GmapPolylineToolbox::getInstance()->getZoomLevels();
+    $this->assertEqual($check, $result);
+
+    // legacy__gmap_polyutil_get_zoom_level($weight)
+    $check = \tests\inc\legacy__gmap_polyutil_get_zoom_level(12);
+    $result = GmapPolylineToolbox::getInstance()->setWeight(12)->getZoomLevel();
+    $this->assertEqual($check, $result);
+
   }
 }
