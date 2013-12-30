@@ -87,7 +87,7 @@ Drupal.gmap.addHandler('gmap', function (elem) {
             // If there was a callback, prefix that.
             // (If there wasn't, marker.rmt was the FULL path.)
             if (obj.vars.rmtcallback) {
-                uri = obj.vars.rmtcallback + '/' + marker.rmt;
+                uri = Drupal.settings.basePath + obj.vars.rmtcallback + '/' + marker.rmt;
             }
             // @Bevan: I think it makes more sense to do it in this order.
             // @Bevan: I don't like your choice of variable btw, seems to me like
