@@ -109,26 +109,32 @@ function gmap_taxonomy_taxonomy_term_insert($term) {
  */
 function gmap_taxonomy_taxonomy_term_update($term) {
   if (gmap_taxonomy_vocabulary_is_enabled($term->vid)) {
-    db_delete('gmap_taxonomy_term')
-      ->condition('tid', $term->tid)
-      ->execute();
-    // Do we have an assigned marker?
-    if (!empty($term->gmap_taxonomy_marker)) {
-      db_insert('gmap_taxonomy_term')
-        ->fields(array(
-          'tid' => $term->tid,
-          'marker' => $term->gmap_taxonomy_marker,
-        ))
-        ->execute();
-      // Update name changes in the gmap_taxonomy_node table.
-      db_update('gmap_taxonomy_node')
-        ->fields(array(
-          'marker' => $term->gmap_taxonomy_marker,
-        ))
+    //If Synchronize translations module is enabled, and the term reference field 
+    //is set to a i18n_sync field, when we update a node, will trigger a term 
+    //update, and the $term->gmap_taxonomy_marker is not set.
+    //Indicates this is a term edit form submit
+    if (isset($term->gmap_taxonomy_marker)) {
+      db_delete('gmap_taxonomy_term')
         ->condition('tid', $term->tid)
         ->execute();
+      // Do we have an assigned marker?
+      if (!empty($term->gmap_taxonomy_marker)) {
+        db_insert('gmap_taxonomy_term')
+          ->fields(array(
+            'tid' => $term->tid,
+            'marker' => $term->gmap_taxonomy_marker,
+          ))
+          ->execute();
+        // Update name changes in the gmap_taxonomy_node table.
+        db_update('gmap_taxonomy_node')
+          ->fields(array(
+            'marker' => $term->gmap_taxonomy_marker,
+          ))
+          ->condition('tid', $term->tid)
+          ->execute();
+      }
+      gmap_taxonomy_reassign_marker($term->tid);
     }
-    gmap_taxonomy_reassign_marker($term->tid);
   }
 }
 
@@ -335,6 +341,10 @@ function gmap_taxonomy_reassign_marker($tid, $deletion = FALSE) {
         ->execute();
     }
   }
+
+
+  //Clear cache to keep data updated
+  cache_clear_all('gmap_taxonomy_markers_data', 'cache');
 }
 
 /**
