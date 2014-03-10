@@ -339,8 +339,8 @@ class gmap_plugin_style_gmap extends views_plugin_style {
 
     $field_options = array();
     $fields = $this->display->handler->get_handlers('field');
-    foreach ($fields as $id => $handler) {
-      $field_options[$id] = $handler->ui_name(FALSE);
+    foreach ($fields as $handler) {
+      $field_options[$handler->options['id']] = (!empty($handler->options['label'])) ? $handler->options['label'] : $handler->options['id'];
     }
 
     $argument_options = array();
