@@ -109,8 +109,8 @@ function gmap_taxonomy_taxonomy_term_insert($term) {
  */
 function gmap_taxonomy_taxonomy_term_update($term) {
   if (gmap_taxonomy_vocabulary_is_enabled($term->vid)) {
-    //If Synchronize translations module is enabled, and the term reference field 
-    //is set to a i18n_sync field, when we update a node, will trigger a term 
+    //If Synchronize translations module is enabled, and the term reference field
+    //is set to a i18n_sync field, when we update a node, will trigger a term
     //update, and the $term->gmap_taxonomy_marker is not set.
     //Indicates this is a term edit form submit
     if (isset($term->gmap_taxonomy_marker)) {
