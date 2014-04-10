@@ -83,6 +83,10 @@ Drupal.gmap.addHandler('gmap', function (elem) {
         }
         // AJAX content
         else if (marker.rmt) {
+            //Immediately add a 'loading' bubble on click while we wait for AJAX
+            infowindow.setContent('<div class="gmap-marker-rmt-loading throbber">Loading</div>');
+            infowindow.open(obj.map, marker.marker);
+
             var uri = marker.rmt;
             // If there was a callback, prefix that.
             // (If there wasn't, marker.rmt was the FULL path.)
