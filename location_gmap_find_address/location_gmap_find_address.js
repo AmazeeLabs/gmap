@@ -5,8 +5,8 @@
             $("button.location-gmap-find-address-button").click(function (e) {
                 e.preventDefault();
                 var address_parts = new Array();
-                $("fieldset#edit-" + $(this).val() + " .form-item input[type=text]," +
-                    "fieldset#edit-" + $(this).val() + " .form-item select > option:selected").each(function () {
+                $("fieldset#" + $(this).val() + " .form-item input[type=text]," +
+                    "fieldset#" + $(this).val() + " .form-item select > option:selected").each(function () {
                         if (!$(this).hasClass('gmap-control') && $(this).val() != '') {
                             if ($(this).is('option')) {
                                 address_parts.push($(this).text());
@@ -17,7 +17,7 @@
                     });
 
                 var address_string = address_parts.join(', ');
-                var gmap_id = $("fieldset#edit-" + $(this).val() + " .gmap-map").attr('id');
+                var gmap_id = $("fieldset#" + $(this).val() + " .gmap-map").attr('id');
                 if (google.maps.version !== 'undefined') { // assume Google Maps API v3 as API v2 did not have this variable
                     var geocoder = new google.maps.Geocoder();
                     geocoder.geocode({'address': address_string}, function (results, status) {
