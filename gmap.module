@@ -1328,7 +1328,7 @@ function gmap_views_ajax_data_alter(&$commands, $view) {
       $plugin_styles[] = $display->display_options['style_plugin'];
     }
   }
-  if (!(in_array('gmap', $plugin_styles))) {
+	if (!count(array_intersect(array('gmap','gmapextended'), $plugin_styles))) {
     return;
   }
 
