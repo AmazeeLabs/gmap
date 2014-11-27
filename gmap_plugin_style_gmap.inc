@@ -138,7 +138,7 @@ class gmap_plugin_style_gmap extends views_plugin_style {
     // Determine fieldname for marker field.
     if ($this->options['markers'] == 'field') {
       $marker_field_obj = $this->view->display_handler->get_handler('field', $this->options['markerfield']);
-      $marker_field = 'field_' . $marker_field_obj->field;
+      $marker_field = $marker_field_obj->field_alias;
     }
 
     // Determine rmt field.
@@ -263,8 +263,8 @@ class gmap_plugin_style_gmap extends views_plugin_style {
                 $image = $row->{$marker_field}[0]['rendered'];
                 $marker_icon = image_style_url($image['#image_style'], $image['#item']['uri']);
               }
-              elseif (!empty($row->{$marker_field}[0]['raw']['value'])) {
-                $markername = $row->{$marker_field}[0]['raw']['value'];
+              elseif (!empty($row->{$marker_field})) {
+                $markername = $row->{$marker_field};
               }
             }
           }
