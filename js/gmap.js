@@ -635,6 +635,6 @@ Drupal.behaviors.GMap = {
 
             //unload map
             Drupal.gmap.unloadMap(mapid[1]);
-        });
+        }).removeClass('gmap-processed');
     }
 };
