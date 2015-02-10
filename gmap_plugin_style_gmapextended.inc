@@ -365,7 +365,7 @@ class gmap_plugin_style_gmapextended extends views_plugin_style {
         $data = views_fetch_data($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == 'location') {
-          $relationship_handler->init($view, $relationship);
+          $relationship_handler->init($this->view, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->label();
         }
       }
