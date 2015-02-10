@@ -102,7 +102,7 @@
                     style[4] = style[4] / 100; // fill opacity
                 }
 
-                if (shape.type == 'encoded_line') {
+                if (shape.type == 'encoded_line' || shape.type == 'line') {
                     shape.color = style[0];
                     shape.weight = style[1];
                     shape.opacity = style[2];
