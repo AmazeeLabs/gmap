@@ -1492,6 +1492,7 @@ function template_preprocess_gmap_view_gmap(&$vars) {
   $vars['map_element'] = array(
     '#type' => 'gmap',
     '#gmap_settings' => $vars['map_object'],
+    '#view' => $vars['view'],
   );
   // Theme the map.
   $vars['map'] = drupal_render($vars['map_element']);
