@@ -372,6 +372,10 @@ Drupal.gmap.addHandler('gmap', function (elem) {
             opts.overviewMapControlOptions = {opened: true};
         }
 
+        // Map styles.
+        if (obj.vars.mapstyles) {
+            obj.opts.styles = obj.vars.mapstyles;
+        }
     });
 
     obj.bind("boot", function () {
