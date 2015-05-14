@@ -79,7 +79,7 @@ Drupal.gmap.addHandler('gmap', function (elem) {
             var el = document.createElement('div');
             // Clone the matched object, run through the clone, stripping off ids, and move the clone into the container.
             jQuery(iwq).eq(iwo).clone(false).find('*').removeAttr('id').appendTo(jQuery(el));
-            marker.setContent(el);
+            infowindow.setContent(el);
             infowindow.open(obj.map, marker.marker);
         }
         // AJAX content
