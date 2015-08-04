@@ -138,7 +138,8 @@ class gmap_plugin_style_gmap extends views_plugin_style {
     // Determine fieldname for marker field.
     if ($this->options['markers'] == 'field') {
       $marker_field_obj = $this->view->display_handler->get_handler('field', $this->options['markerfield']);
-      $marker_field = $marker_field_obj->field_alias;
+      $marker_field = $marker_field_obj->field_info['type'] == 'gmap_marker' ?
+        "field_$marker_field_obj->field" : $marker_field_obj->field_alias;
     }
 
     // Determine rmt field.
@@ -255,17 +256,13 @@ class gmap_plugin_style_gmap extends views_plugin_style {
               }
             }
           }
-          elseif ($this->options['markers'] == 'field') {
-            if (!empty($row->{$marker_field})
-              && ($marker_field_obj->field_info['type'] == 'image' || !empty($row->{$marker_field}[0]['raw']['value']))
-            ) {
-              if ($marker_field_obj->field_info['type'] == 'image') {
-                $image = $row->{$marker_field}[0]['rendered'];
-                $marker_icon = image_style_url($image['#image_style'], $image['#item']['uri']);
-              }
-              elseif (!empty($row->{$marker_field})) {
-                $markername = $row->{$marker_field};
-              }
+          elseif ($this->options['markers'] == 'field' && !empty($row->{$marker_field})) {
+            if ($marker_field_obj->field_info['type'] == 'image') {
+              $image = $row->{$marker_field}[0]['rendered'];
+              $marker_icon = image_style_url($image['#image_style'], $image['#item']['uri']);
+            }
+            elseif (!empty($row->{$marker_field}[0]['raw']['value'])) {
+              $markername = $row->{$marker_field}[0]['raw']['value'];
             }
           }
           if (!isset($offsets[$markername])) {
