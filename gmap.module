@@ -1504,5 +1504,6 @@ function template_preprocess_gmap_view_gmap(&$vars) {
  * @todo move this to GmapRequest class
  */
 function gmap_views_protocol() {
-  return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+  global $base_url;
+  return parse_url($base_url, PHP_URL_SCHEME) == 'https' ? 'https' : 'http';
 }
