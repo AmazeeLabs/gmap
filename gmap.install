@@ -113,3 +113,14 @@ function gmap_update_7000() {
   return $ret;
 }
 */
+
+/**
++ * Mini-update -- update gmap markerfiles variable to an array if it is not
++ * already.
++ */
+function gmap_update_7201() {
+ $markerdirs = variable_get('gmap_markerfiles', array(drupal_get_path('module', 'gmap') . '/markers'));
+ if (!is_array($markerdirs)) {
+   variable_set('gmap_markerfiles', array($markerdirs));
+  }
+}
