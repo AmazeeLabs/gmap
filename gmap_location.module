@@ -467,7 +467,20 @@ function gmap_location_admin_settings() {
     '#default_value' => $temp['macro'],
     '#size' => 50,
     '#maxlength' => 500,
-    '#description' => t('The GMap macro to be used when displaying user information. See the <a href="http://drupal.org/documentation/modules/gmap/macros">documentation on GMap macros</a>.'),
+    '#description' => t(
+      'The GMap macro used when the user information is displayed. See the !macros_link.',
+      array(
+        '!macros_link' => l(
+          'documentation on GMap macros',
+          'http://drupal.org/documentation/modules/gmap/macros',
+          array(
+            'attributes' => array(
+              'target' => '_blank',
+            ),
+          )
+        ),
+      )
+    ),
   );
   $form['user']['gmap_user_map']['header'] = array(
     '#type' => 'textarea',
@@ -535,7 +548,20 @@ function gmap_location_admin_settings() {
     '#default_value' => $temp['macro'],
     '#size' => 50,
     '#maxlength' => 500,
-    '#description' => t('The GMap macro which will be used to display the node information. See the <a href="http://drupal.org/documentation/modules/gmap/macros">documentation on GMap macros</a>.'),
+    '#description' => t(
+      'The GMap macro used when the node information is displayed. See the !macros_link.',
+      array(
+        '!macros_link' => l(
+          'documentation on GMap macros',
+          'http://drupal.org/documentation/modules/gmap/macros',
+          array(
+            'attributes' => array(
+              'target' => '_blank',
+            ),
+          )
+        ),
+      )
+    ),
   );
   $form['node']['gmap_node_map']['header'] = array(
     '#type' => 'textarea',
