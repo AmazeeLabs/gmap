@@ -460,7 +460,7 @@ function _gmap_filter_process($text, $filter, $format) {
 function _gmap_filter_tips($filter, $format, $long = FALSE) {
   // Only display macro if user can create one.
   if (user_access('create gmap macro')) {
-    return t('Insert Google Map macro.') . '<a href="' . url('map/macro') . '" target="_blank" >' . t('Create a macro') . '</a>';
+    return t('Insert Google Map macro.') . l(t('Create a macro'), 'map/macro', array('attributes' => array('target' => '_blank')));
   }
   else {
     return t('Insert Google Map macro.');
