@@ -602,7 +602,7 @@ function gmap_location_admin_settings() {
   foreach ($ntypes as $key => $value) {
     $form['node']['gmap_node_markers'][$key] = array(
       '#type' => 'gmap_markerchooser',
-      '#title' => t('Marker for %type', array('%type' => $value->name)),
+      '#title' => t('Marker for %type', array('%type' => gmap_location_t("nodetype:type:$key:name", $value->name))),
       '#default_value' => isset($defaults[$key]) ? $defaults[$key] : 'drupal',
     );
     $settings = variable_get("location_settings_node_$key", FALSE);
@@ -652,7 +652,7 @@ function gmap_location_block_configure($delta = '') {
       if ((isset($settings['multiple']['max']) && $settings['multiple']['max']) || variable_get("location_maxnum_$key", 0)) {
         $form["gmap_location_block_macro_$key"] = array(
           '#type' => 'textfield',
-          '#title' => t('Map Macro for %type', array('%type' => $value->name)),
+          '#title' => t('Map Macro for %type', array('%type' => gmap_location_t("nodetype:type:$key:name", $value->name))),
           '#size' => 60,
           '#maxlength' => 500,
           '#default_value' => variable_get("gmap_location_block_macro_$key", ''),
@@ -671,10 +671,14 @@ function gmap_location_block_configure($delta = '') {
       '#default_value' => variable_get('gmap_location_author_block_macro', '[gmap |width=100% |height=200px |control=None |behavior=+autozoom +notype]'),
     );
 
+    $ntypes = node_type_get_types();
+    foreach ($ntypes as $type => $name) {
+      $ntypes[$type] = check_plain(gmap_location_t("nodetype:type:$type:name", $name));
+    }
     $form['gmap_location_author_block_types'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Enable author block for the following content types'),
-      '#options' => array_map('check_plain', node_type_get_names()),
+      '#options' => $ntypes,
       '#default_value' => variable_get('gmap_location_author_block_types', array()),
     );
 
@@ -946,4 +950,16 @@ function gmap_location_node_type($op, $info) {
       break;
   }
   variable_set('gmap_node_markers', $temp);
+}
+
+/**
+ * Wrapper function for i18n_string_build() if i18n_string enabled.
+ */
+function gmap_location_t($name, $string) {
+  if (module_exists('i18n_string')) {
+    return i18n_string_build($name, $string);
+  }
+  else {
+    return $string;
+  }
 }
