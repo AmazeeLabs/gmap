@@ -501,17 +501,21 @@ function gmap_regenerate_markers() {
   $contents .= "Drupal.gmap = Drupal.gmap || {};\n";
   $contents .= "Drupal.gmap.icondata = " . drupal_json_encode(gmap_get_icondata(TRUE)) . ";\n";
 
-  $dir = "public://js/";
-
+  $dir = 'public://js/';
+  $filepath = $dir . 'gmap_markers.js';
   // Make sure js/ exists in the files folder.
   if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
     $file = file_save_data($contents, 'public://js/gmap_markers.js', FILE_EXISTS_REPLACE);
-    if (!empty($file)) {
+    if ($file === FALSE) {
+      drupal_set_message(t('GMap is unable to save the marker bundle. Please check gmap_markers.js permissions!'), 'error');
+    }
+    else {
       variable_set('gmap_marker_file', $file->fid);
     }
   }
   else {
-    drupal_set_message(t('GMap is unable to save the marker bundle. Markers will not work!'), 'error');
+    drupal_set_message(t('GMap is unable to save the marker bundle, so the markers will not work. Please check file system permissions of the %filepath!', array('%filepath' => $filepath)), 'error');
+    watchdog('gmap', 'GMap write error when saving the marker bundle to %filepath.', array('%filepath' => $filepath), WATCHDOG_ERROR);
   }
 
   // Also regenerate the cached marker titles array.
