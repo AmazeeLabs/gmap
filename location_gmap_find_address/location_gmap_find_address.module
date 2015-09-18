@@ -31,6 +31,6 @@ function location_gmap_find_address_field_widget_form_alter(&$element, &$form_st
  * @see location_gmap_find_address_field_widget_form_alter()
  */
 function location_gmap_find_address_location_pre_render($element) {
-  $element['locpick']["#prefix"] = '<div class="location-gmap-find-address-button-wrapper"><button type="button" class="location-gmap-find-address-button" value="' . $element['#id'] . '">' . t('Find Address on Map') . '</button></div>';
+  $element['locpick']["#prefix"] = '<div class="form-item location-gmap-find-address-button-wrapper"><button type="button" class="location-gmap-find-address-button" value="' . $element['#id'] . '">' . t('Find Address on Map') . '</button></div>';
   return $element;
 }
