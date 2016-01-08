@@ -200,14 +200,15 @@ function _gmap_compress_icon_def($iconset) {
     'anchorY',
     'infoX',
     'infoY',
+    'scale',
     'shadow',
     'printImage',
     'mozPrintImage',
     'printShadow',
     'transparent',
   );
-  $ints = array(3 => TRUE, 4 => TRUE, 5 => TRUE, 6 => TRUE);
-  $nulls = array('', '', array(), 0, 0, 0, 0, '', '', '', '', '');
+  $ints = array(3 => TRUE, 4 => TRUE, 5 => TRUE, 6 => TRUE, 7 => TRUE);
+  $nulls = array('', '', array(), 0, 0, 0, 0, 0, '', '', '', '', '');
 
   $a = array();
   for ($c0 = 0; $c0 < count($order); $c0++) {
